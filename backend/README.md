@@ -73,6 +73,8 @@ To roll back the last migration:
 uv run alembic downgrade -1
 ```
 
+> **Note:** The initial migration (`0001_enable_postgis`) enables PostGIS on upgrade and intentionally preserves the extension on downgrade (no-op) to avoid cascading deletion of shared spatial infrastructure.
+
 ### 5. Start the Development Server
 
 Start the FastAPI application with auto-reload:

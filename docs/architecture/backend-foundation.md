@@ -101,7 +101,7 @@ SafeSpace Intelligence strictly enforces version-controlled migrations for all s
   - `target_metadata` links to `Base.metadata`, enabling Alembic autogeneration for model changes in subsequent phases.
 - **PostGIS Bootstrapping:**
   - Migration `0001_enable_postgis.py` enables the `postgis` extension via `CREATE EXTENSION IF NOT EXISTS postgis;`.
-  - Downgrade capability is fully supported via `DROP EXTENSION IF EXISTS postgis;`.
+  - Downgrade intentionally preserves the `postgis` extension (no-op) to avoid cascading data loss or breaking dependent spatial objects and extensions.
 
 ---
 

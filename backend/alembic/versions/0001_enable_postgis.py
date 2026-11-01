@@ -23,5 +23,9 @@ def upgrade() -> None:
 
 
 def downgrade() -> None:
-    """Drop PostGIS extension from PostgreSQL."""
-    op.execute("DROP EXTENSION IF EXISTS postgis;")
+    """Preserve PostGIS extension during downgrade.
+
+    The PostGIS extension is intentionally preserved on downgrade to prevent
+    cascading data loss or breaking dependent spatial objects and extensions.
+    """
+    pass

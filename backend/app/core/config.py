@@ -20,7 +20,7 @@ class Settings(BaseSettings):
 
     # Database Configuration
     DATABASE_URL: str = (
-        "postgresql+psycopg://safespace_user:safespace_password@localhost:5432/safespace_db"
+        "postgresql+psycopg://safespace_user:safespace_password@127.0.0.1:5433/safespace_db"
     )
 
     # Security & Tokens
