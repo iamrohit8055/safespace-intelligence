@@ -1,0 +1,31 @@
+services:
+  postgres:
+    image: postgis/postgis:17-3.5
+    container_name: safespace-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-safespace_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-safespace_password}
+      POSTGRES_DB: ${POSTGRES_DB:-safespace_db}
+    ports:
+      # Bound to 127.0.0.1 by default for local development security (prevents public network exposure)
+      - "127.0.0.1:${POSTGRES_PORT:-5433}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-safespace_user} -d ${POSTGRES_DB:-safespace_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - safespace-network
+
+volumes:
+  postgres_data:
+    name: safespace_postgres_data
+
+networks:
+  safespace-network:
+    name: safespace_network
+    driver: bridge
