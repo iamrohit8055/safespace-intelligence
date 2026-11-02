@@ -7,12 +7,14 @@ from unittest.mock import MagicMock
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy.exc import OperationalError
+from sqlalchemy.orm import Session
 
 # Set testing environment before loading application settings
 os.environ["APP_ENV"] = "testing"
 os.environ["DEBUG"] = "true"
 
 from app.core.config import get_settings  # noqa: E402
+from app.database.session import engine  # noqa: E402
 from app.main import app  # noqa: E402
 
 
@@ -27,6 +29,17 @@ def reset_settings_cache() -> Generator[None, None, None]:
 @pytest.fixture
 def client() -> Generator[TestClient, None, None]:
     """Test client fixture for HTTP requests."""
+    with TestClient(app) as test_client:
+        yield test_client
+    app.dependency_overrides.clear()
+
+
+@pytest.fixture
+def auth_client(db_session: Session) -> Generator[TestClient, None, None]:
+    """Test client fixture bound to the transactional db_session with automatic rollback."""
+    from app.database.session import get_db
+
+    app.dependency_overrides[get_db] = lambda: db_session
     with TestClient(app) as test_client:
         yield test_client
     app.dependency_overrides.clear()
@@ -50,3 +63,18 @@ def mock_failing_db_session() -> MagicMock:
         orig=Exception("Connection refused: database server down"),
     )
     return session
+
+
+@pytest.fixture
+def db_session() -> Generator[Session, None, None]:
+    """Provide a transactional database session that is always rolled back after each test."""
+    connection = engine.connect()
+    transaction = connection.begin()
+    session = Session(bind=connection, join_transaction_mode="create_savepoint")
+    try:
+        yield session
+    finally:
+        session.close()
+        if transaction.is_active:
+            transaction.rollback()
+        connection.close()

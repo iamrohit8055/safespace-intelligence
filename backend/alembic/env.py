@@ -13,6 +13,7 @@ backend_dir = Path(__file__).resolve().parent.parent
 if str(backend_dir) not in sys.path:
     sys.path.insert(0, str(backend_dir))
 
+import app.models  # noqa: E402, F401
 from app.core.config import get_settings  # noqa: E402
 from app.database.base import Base  # noqa: E402
 
@@ -34,6 +35,18 @@ config.set_main_option(
 )
 
 
+def include_object(object, name, type_, reflected, compare_to):
+    """Filter out PostGIS system tables from Alembic autogeneration."""
+    postgis_tables = {
+        "spatial_ref_sys",
+        "geometry_columns",
+        "geography_columns",
+        "raster_columns",
+        "raster_overviews",
+    }
+    return not (type_ == "table" and name in postgis_tables)
+
+
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode.
 
@@ -48,6 +61,7 @@ def run_migrations_offline() -> None:
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
+        include_object=include_object,
     )
 
     with context.begin_transaction():
@@ -70,6 +84,7 @@ def run_migrations_online() -> None:
         context.configure(
             connection=connection,
             target_metadata=target_metadata,
+            include_object=include_object,
         )
 
         with context.begin_transaction():

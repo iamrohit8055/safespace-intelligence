@@ -1,0 +1,185 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "DM Serif Display", Georgia, "Times New Roman", serif;
+  --font-sans: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+
+  /* Urban Editorial Palette Tokens */
+  --color-forest: #244B3B;
+  --color-forest-deep: #18372C;
+  --color-forest-dark: #122820;
+  --color-forest-hover: #1D3F32;
+  --color-sage: #829783;
+  --color-sage-soft: #DCE5D9;
+  --color-sage-light: #EEF3EC;
+  --color-ivory: #F5F2EA;
+  --color-ivory-light: #FAF8F4;
+  --color-paper: #FFFEFA;
+  --color-charcoal: #292D29;
+  --color-charcoal-deep: #1E211E;
+  --color-charcoal-muted: #73766F;
+  --color-terracotta: #C36B48;
+  --color-terracotta-dark: #A25335;
+  --color-terracotta-soft: #FBF0EB;
+  --color-gold: #C5A66B;
+  --color-gold-soft: #FAF5EB;
+}
+
+@layer base {
+  :root {
+    --background: 43 30% 94%; /* #F5F2EA Warm Ivory */
+    --foreground: 120 4% 17%; /* #292D29 Charcoal */
+    --card: 50 100% 99%;      /* #FFFEFA Paper White */
+    --card-foreground: 120 4% 17%;
+    --popover: 50 100% 99%;
+    --popover-foreground: 120 4% 17%;
+    --primary: 156 35% 22%;   /* #244B3B Forest Green */
+    --primary-foreground: 43 30% 94%;
+    --secondary: 104 22% 88%; /* #DCE5D9 Soft Sage */
+    --secondary-foreground: 159 39% 15%; /* #18372C Deep Forest */
+    --muted: 104 22% 88%;
+    --muted-foreground: 84 4% 45%; /* #73766F Secondary Text */
+    --accent: 17 50% 52%;     /* #C36B48 Burnt Terracotta */
+    --accent-foreground: 50 100% 99%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 50 100% 99%;
+    --border: 104 18% 75%;
+    --input: 104 18% 75%;
+    --ring: 156 35% 22%;
+    --radius: 0.25rem;
+  }
+
+  .dark {
+    --background: 120 5% 10%; /* #161816 Deep Charcoal */
+    --foreground: 43 30% 94%; /* #F5F2EA Warm Ivory */
+    --card: 120 5% 13%;       /* #1F221F */
+    --card-foreground: 43 30% 94%;
+    --popover: 120 5% 13%;
+    --popover-foreground: 43 30% 94%;
+    --primary: 104 22% 88%;   /* Soft sage on dark */
+    --primary-foreground: 159 39% 15%;
+    --secondary: 120 4% 20%;
+    --secondary-foreground: 43 30% 94%;
+    --muted: 120 4% 20%;
+    --muted-foreground: 84 4% 65%;
+    --accent: 17 50% 52%;
+    --accent-foreground: 50 100% 99%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 50 100% 99%;
+    --border: 120 4% 22%;
+    --input: 120 4% 22%;
+    --ring: 104 22% 88%;
+  }
+}
+
+/* Modal and dialog accessibility & scroll containment */
+dialog:modal {
+  overscroll-behavior: contain;
+}
+
+dialog::backdrop {
+  overflow: hidden;
+  overscroll-behavior: contain;
+  background-color: rgba(24, 55, 44, 0.65);
+  backdrop-filter: blur(4px);
+}
+
+/* Modern Form Validation styling (:user-invalid) */
+input:user-invalid,
+select:user-invalid,
+textarea:user-invalid {
+  border-color: #C36B48 !important;
+}
+
+/* Typography & Base reset */
+body {
+  font-family: var(--font-sans, "Manrope", sans-serif);
+  background-color: #F5F2EA;
+  color: #292D29;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Editorial Headline Typography */
+.font-serif-headline {
+  font-family: var(--font-serif, "DM Serif Display", Georgia, serif);
+  letter-spacing: -0.015em;
+  font-weight: 400;
+}
+
+/* Precision Monospace Metrics Utility */
+.font-mono-numbers {
+  font-family: var(--font-mono, "IBM Plex Mono", ui-monospace, monospace);
+  font-feature-settings: "tnum" 1, "zero" 1;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Restrained Editorial Scrollbars */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(130, 151, 131, 0.35);
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(130, 151, 131, 0.6);
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* MapLibre Marker & Popup Styles */
+.safespace-marker-wrapper {
+  pointer-events: auto;
+  user-select: none;
+  touch-action: none;
+}
+
+.safespace-editorial-popup {
+  pointer-events: none;
+  z-index: 50;
+}
+
+.safespace-editorial-popup .maplibregl-popup-content {
+  background: #FFFEFA;
+  color: #292D29;
+  border-radius: 4px;
+  border: 1px solid rgba(130, 151, 131, 0.35);
+  box-shadow: 0 10px 20px -3px rgba(0, 0, 0, 0.18), 0 4px 6px -2px rgba(0, 0, 0, 0.08);
+  padding: 8px 12px;
+}
+
+.dark .safespace-editorial-popup .maplibregl-popup-content {
+  background: #1E211E;
+  color: #F5F2EA;
+  border: 1px solid rgba(130, 151, 131, 0.25);
+}
+
+.safespace-editorial-popup .maplibregl-popup-tip {
+  border-top-color: #FFFEFA;
+}
+
+.dark .safespace-editorial-popup .maplibregl-popup-tip {
+  border-top-color: #1E211E;
+}
